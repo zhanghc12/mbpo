@@ -205,8 +205,8 @@ class MBPO(RLAlgorithm):
             self._training_progress = Progress(self._epoch_length * self._n_train_repeat)
             start_samples = self.sampler._total_samples
             for i in count():
-                f.write(str(1))
-
+                f.write(str(i))
+                f.flush()
                 samples_now = self.sampler._total_samples
                 self._timestep = samples_now - start_samples
 
