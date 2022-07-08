@@ -195,7 +195,8 @@ class MBPO(RLAlgorithm):
         gt.set_def_unique(False)
 
         self._training_before_hook()
-
+        import os
+        f = open('~/projects/mbpo/here.txt', 'w')
         for self._epoch in gt.timed_for(range(self._epoch, self._n_epochs)):
 
             self._epoch_before_hook()
@@ -204,7 +205,7 @@ class MBPO(RLAlgorithm):
             self._training_progress = Progress(self._epoch_length * self._n_train_repeat)
             start_samples = self.sampler._total_samples
             for i in count():
-                print(3)
+                f.write(i)
 
                 samples_now = self.sampler._total_samples
                 self._timestep = samples_now - start_samples

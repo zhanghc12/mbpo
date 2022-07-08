@@ -64,7 +64,6 @@ class ExperimentRunner(tune.Trainable):
         static_fns = mbpo.static[domain.lower()]
         ####
 
-        print(1)
         self.algorithm = get_algorithm_from_variant(
             variant=self._variant,
             training_environment=training_environment,
