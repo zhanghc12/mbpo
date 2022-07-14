@@ -355,7 +355,7 @@ class BNN:
             for batch_num in range(int(np.ceil(idxs.shape[-1] / batch_size))):
                 #batch_idxs = idxs[:, batch_num * batch_size:(batch_num + 1) * batch_size]
                 # modified by zhc
-                powererd_priority = np.power(priority, 0.5)
+                powererd_priority = np.squeeze(np.power(priority, 0.5))
                 batch_idxs = np.random.choice(np.arange(inputs.shape[0]), batch_size, p=powererd_priority/(powererd_priority + 1e-2))
                 self.sess.run(
                     self.train_op,
