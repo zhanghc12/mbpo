@@ -449,10 +449,10 @@ class MBPO(RLAlgorithm):
         model_batch_size = batch_size - env_batch_size
 
         ## can sample from the env pool even if env_batch_size == 0
-        env_batch = self._pool.random_batch(env_batch_size)
+        env_batch, _ = self._pool.random_batch(env_batch_size)
 
         if model_batch_size > 0:
-            model_batch = self._model_pool.random_batch(model_batch_size)
+            model_batch, _ = self._model_pool.random_batch(model_batch_size)
 
             keys = env_batch.keys()
             batch = {k: np.concatenate((env_batch[k], model_batch[k]), axis=0) for k in keys}
