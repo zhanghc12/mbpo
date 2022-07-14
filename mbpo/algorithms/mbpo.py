@@ -464,7 +464,11 @@ class MBPO(RLAlgorithm):
 
     def _update_priority(self):
         batch, indices = self._pool.random_batch(batch_size=256, return_index=True)
-        priority = self._policy._get_priority(batch)
+        feed_dict = {
+            self._observations_ph: batch['observations'],
+            self._actions_ph: batch['actions'],
+        }
+        priority = self._session.run(self.priority, feed_dict)
         self._pool.update_priority(indices, priority)
 
     def _init_global_step(self):
@@ -662,6 +666,8 @@ class MBPO(RLAlgorithm):
             ) if self._tf_summaries else ())
 
         self._training_ops.update({'policy_train_op': policy_train_op})
+
+        self.priority = tf.exp(log_pis)
 
     def _init_training(self):
         self._update_target(tau=1.0)
