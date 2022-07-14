@@ -394,7 +394,7 @@ class MBPO(RLAlgorithm):
         print('[ Model Rollout ] Starting | Epoch: {} | Rollout length: {} | Batch size: {}'.format(
             self._epoch, self._rollout_length, rollout_batch_size
         ))
-        batch = self.sampler.random_batch(rollout_batch_size)
+        batch, _ = self.sampler.random_batch(rollout_batch_size)
         obs = batch['observations']
         steps_added = []
         # traj_uncertainty = np.zeros([rollout_batch_size, 1])  # added by zhc
