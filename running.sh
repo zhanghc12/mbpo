@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=2 mbpo run_local examples.development --config=examples.config.halfcheetah.0 --gpus=1 --trial-gpus=1
