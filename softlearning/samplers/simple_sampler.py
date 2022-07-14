@@ -32,7 +32,7 @@ class SimpleSampler(BaseSampler):
             'terminals': [terminal],
             'next_observations': next_observation,
             'infos': info,
-            'priority': 1,
+            'priority': [1],
         }
 
         return processed_observation
