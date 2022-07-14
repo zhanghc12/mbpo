@@ -81,7 +81,8 @@ class FakeEnv:
             rewards = rewards[0]
             terminals = terminals[0]
 
-        info = {'mean': return_means, 'std': return_stds, 'log_prob': log_prob, 'dev': dev, 'uncertainty': uncertainty}
+        # info = {'mean': return_means, 'std': return_stds, 'log_prob': log_prob, 'dev': dev, 'uncertainty': uncertainty}
+        info = {'mean': return_means, 'std': return_stds, 'log_prob': log_prob, 'dev': dev}
         return next_obs, rewards, terminals, info
 
     ## for debugging computation graph
