@@ -330,6 +330,8 @@ class BNN:
         holdout_inputs = np.tile(holdout_inputs[None], [self.num_nets, 1, 1])
         holdout_targets = np.tile(holdout_targets[None], [self.num_nets, 1, 1])
 
+        # modified by zhc
+        priority = priority[permutation[num_holdout:]]
         print('[ BNN ] Training {} | Holdout: {}'.format(inputs.shape, holdout_inputs.shape))
         with self.sess.as_default():
             self.scaler.fit(inputs)
