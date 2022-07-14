@@ -157,6 +157,10 @@ class MBPO(RLAlgorithm):
 
         self._build()
 
+        self.uncertainty_threshold = 10  # added by zhc
+        log_prefix = str(np.random.randint(0,100000))
+        self.log_filename = '/home/zhanghc/log_mbpo/return_o' + str(obs_dim) + '_a' + str(act_dim) + '_'+ log_prefix + '.txt'
+
     def _build(self):
         self._training_ops = {}
 
@@ -262,6 +266,9 @@ class MBPO(RLAlgorithm):
                 evaluation_metrics = self._evaluate_rollouts(
                     evaluation_paths, evaluation_environment)
                 gt.stamp('evaluation_metrics')
+
+                with open(self.log_filename, 'a') as file:
+                        file.write(str(samples_now)+' '+str(evaluation_metrics['return-average'])+'\n')
             else:
                 evaluation_metrics = {}
 
@@ -377,8 +384,10 @@ class MBPO(RLAlgorithm):
 
     def _train_model(self, **kwargs):
         env_samples = self._pool.return_all_samples()
-        train_inputs, train_outputs = format_samples_for_training(env_samples)
-        model_metrics = self._model.train(train_inputs, train_outputs, **kwargs)
+        # modified by zhc
+        # train_inputs, train_outputs = format_samples_for_training(env_samples)
+        train_inputs, train_outputs, priority = format_samples_for_training(env_samples, return_priority=True)
+        model_metrics = self._model.train(train_inputs, train_outputs, priority, **kwargs)
         return model_metrics
 
     def _rollout_model(self, rollout_batch_size, **kwargs):
@@ -388,6 +397,7 @@ class MBPO(RLAlgorithm):
         batch = self.sampler.random_batch(rollout_batch_size)
         obs = batch['observations']
         steps_added = []
+        # traj_uncertainty = np.zeros([rollout_batch_size, 1])  # added by zhc
         for i in range(self._rollout_length):
             act = self._policy.actions_np(obs)
             
@@ -403,7 +413,16 @@ class MBPO(RLAlgorithm):
                 break
 
             obs = next_obs[nonterm_mask]
-
+            # todo: rollout_length clip?
+            '''
+            traj_uncertainty = traj_uncertainty + info['uncertainty']
+            uncertainty_mask = (traj_uncertainty < self.uncertainty_threshold).squeeze(-1)
+            if uncertainty_mask.sum() == 0:
+                print('[ Model Rollout ] Breaking early because of ue: {} | {} / {}'.format(i, uncertainty_mask.sum(), uncertainty_mask.shape))
+                break
+            obs = next_obs[nonterm_mask][uncertainty_mask]  # added by zhc
+            traj_uncertainty = traj_uncertainty[nonterm_mask][uncertainty_mask]  # added by zhc
+            '''
         mean_rollout_length = sum(steps_added) / rollout_batch_size
         rollout_stats = {'mean_rollout_length': mean_rollout_length}
         print('[ Model Rollout ] Added: {:.1e} | Model pool: {:.1e} (max {:.1e}) | Length: {} | Train rep: {}'.format(
@@ -442,6 +461,11 @@ class MBPO(RLAlgorithm):
             ## so skip the model pool sampling
             batch = env_batch
         return batch
+
+    def _update_priority(self):
+        batch, indices = self._pool.random_batch(batch_size=256, return_index=True)
+        priority = self._policy._get_priority(batch)
+        self._pool.update_priority(indices, priority)
 
     def _init_global_step(self):
         self.global_step = training_util.get_or_create_global_step()
@@ -663,9 +687,13 @@ class MBPO(RLAlgorithm):
 
         self._session.run(self._training_ops, feed_dict)
 
+
         if iteration % self._target_update_interval == 0:
             # Run target ops here.
             self._update_target()
+
+        # added by zhc todo: fix the frequency
+        self._update_priority()
 
     def _get_feed_dict(self, iteration, batch):
         """Construct TensorFlow feed_dict from sample batch."""

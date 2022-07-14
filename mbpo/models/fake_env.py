@@ -44,6 +44,13 @@ class FakeEnv:
         ensemble_model_means[:,:,1:] += obs
         ensemble_model_stds = np.sqrt(ensemble_model_vars)
 
+        ensemble_means_obs = ensemble_model_means[:, :, 1:]
+        mean_obs_means = np.mean(ensemble_means_obs, axis=0)  # average predictions over models
+        diffs = ensemble_means_obs - mean_obs_means
+
+        uncertainty = np.mean(np.mean(diffs * diffs, axis=2), axis=0) + np.mean(np.mean(ensemble_model_vars[:, :, 1:], axis=2), axis=0)
+        uncertainty = np.expand_dims(uncertainty, axis=1)
+
         if deterministic:
             ensemble_samples = ensemble_model_means
         else:
@@ -74,7 +81,7 @@ class FakeEnv:
             rewards = rewards[0]
             terminals = terminals[0]
 
-        info = {'mean': return_means, 'std': return_stds, 'log_prob': log_prob, 'dev': dev}
+        info = {'mean': return_means, 'std': return_stds, 'log_prob': log_prob, 'dev': dev, 'uncertainty': uncertainty}
         return next_obs, rewards, terminals, info
 
     ## for debugging computation graph

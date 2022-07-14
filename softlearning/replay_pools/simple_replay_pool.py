@@ -64,6 +64,10 @@ class SimpleReplayPool(FlexibleReplayPool):
                     'shape': (1, ),
                     'dtype': 'bool'
                 },
+                'priority':{
+                        'shape': (1,),
+                        'dtype': 'bool'
+                },
             }
         }
 
@@ -131,7 +135,8 @@ class SimpleReplayPool(FlexibleReplayPool):
     def batch_by_indices(self,
                          indices,
                          field_name_filter=None,
-                         observation_keys=None):
+                         observation_keys=None,
+                         return_index=False):
         if not isinstance(self._observation_space, Dict):
             return super(SimpleReplayPool, self).batch_by_indices(
                 indices, field_name_filter=field_name_filter)
@@ -165,6 +170,8 @@ class SimpleReplayPool(FlexibleReplayPool):
                 for field_name in filtered_fields
             }
 
+        if return_index:
+            return batch, indices
         return batch
 
     def terminate_episode(self):

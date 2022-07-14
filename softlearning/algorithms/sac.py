@@ -324,6 +324,8 @@ class SAC(RLAlgorithm):
 
         self._training_ops.update({'policy_train_op': policy_train_op})
 
+        self.priority = tf.exp(log_pis)
+
     def _init_training(self):
         self._update_target(tau=1.0)
 
@@ -348,6 +350,19 @@ class SAC(RLAlgorithm):
         if iteration % self._target_update_interval == 0:
             # Run target ops here.
             self._update_target()
+
+    # todo: update the on-policy degree. added by zhc
+    def _get_priority(self, batch):
+        # batch, indices = self._pool.random_batch
+        feed_dict = {
+            self._observations_ph: batch['observations'],
+            self._actions_ph: batch['actions'],
+        }
+        priority = self._session.run(self.priority, feed_dict)
+        return priority
+    # self._pool.update_value(indices, priority)
+    # todo: the pool is wrong, contains model and environment?
+
 
     def _get_feed_dict(self, iteration, batch):
         """Construct TensorFlow feed_dict from sample batch."""

@@ -67,6 +67,9 @@ class FlexibleReplayPool(ReplayPool):
 
         self._advance(num_samples)
 
+    def update_priority(self, index, value):
+        self.fields['priority'][index] = value
+
     def random_indices(self, batch_size):
         if self._size == 0: return np.arange(0, 0)
         return np.random.randint(0, self._size, batch_size)

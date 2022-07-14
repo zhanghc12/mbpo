@@ -17,7 +17,8 @@ def construct_model(obs_dim=11, act_dim=3, rew_dim=1, hidden_dim=200, num_networ
 	model.finalize(tf.train.AdamOptimizer, {"learning_rate": 0.001})
 	return model
 
-def format_samples_for_training(samples):
+# modified by zhc
+def format_samples_for_training(samples, return_priority=False):
 	obs = samples['observations']
 	act = samples['actions']
 	next_obs = samples['next_observations']
@@ -25,6 +26,8 @@ def format_samples_for_training(samples):
 	delta_obs = next_obs - obs
 	inputs = np.concatenate((obs, act), axis=-1)
 	outputs = np.concatenate((rew, delta_obs), axis=-1)
+	if return_priority:
+		return inputs, outputs, samples['priority']
 	return inputs, outputs
 
 def reset_model(model):
