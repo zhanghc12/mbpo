@@ -170,9 +170,9 @@ class SimpleReplayPool(FlexibleReplayPool):
                 for field_name in filtered_fields
             }
 
-        if return_index:
-            return batch, indices
-        return batch
+        #if return_index:
+        return batch, indices
+        #return batch
 
     def terminate_episode(self):
         pass

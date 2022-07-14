@@ -120,7 +120,7 @@ class FlexibleReplayPool(ReplayPool):
         return {
             field_name: self.fields[field_name][indices]
             for field_name in field_names
-        }
+        }, indices
 
     def save_latest_experience(self, pickle_path):
         latest_samples = self.last_n_batch(self._samples_since_save)
