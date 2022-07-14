@@ -78,7 +78,7 @@ def rollout(env,
     path = pool.batch_by_indices(
         np.arange(pool._size),
         observation_keys=getattr(env, 'observation_keys', None))
-    path['infos'] = infos
+    # path['infos'] = infos
 
     if render_mode == 'rgb_array':
         path['images'] = np.stack(images, axis=0)
