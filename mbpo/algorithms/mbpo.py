@@ -667,7 +667,7 @@ class MBPO(RLAlgorithm):
 
         self._training_ops.update({'policy_train_op': policy_train_op})
 
-        self.priority = tf.exp(log_pis)
+        self.priority = log_pis
 
     def _init_training(self):
         self._update_target(tau=1.0)
