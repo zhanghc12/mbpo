@@ -164,6 +164,7 @@ class MBPO(RLAlgorithm):
 
         print('-' * 100)
         print(kwargs)
+        assert 0
 
     def _build(self):
         self._training_ops = {}
