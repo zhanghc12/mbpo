@@ -35,7 +35,7 @@ class SimpleSampler(BaseSampler):
             'next_observations': next_observation,
             'infos': info,
             'priority': [1],
-            'log_pi': [log_pi],
+            'log_pi': log_pi,
         }
 
         return processed_observation
