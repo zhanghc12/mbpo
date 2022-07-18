@@ -68,6 +68,10 @@ class SimpleReplayPool(FlexibleReplayPool):
                         'shape': (1,),
                         'dtype': 'bool'
                 },
+                'log_pi': {
+                    'shape': (1,),
+                    'dtype': 'bool'
+                },
             }
         }
 

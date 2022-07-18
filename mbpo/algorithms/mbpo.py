@@ -160,6 +160,7 @@ class MBPO(RLAlgorithm):
         self.uncertainty_threshold = 10  # added by zhc
         log_prefix = str(np.random.randint(0,100000))
         self.log_filename = '/home/zhanghc/log_mbpo/return_o' + str(obs_dim) + '_a' + str(act_dim) + '_'+ log_prefix + '.txt'
+        self.ir_filename = '/home/zhanghc/log_mbpo/ir_o' + str(obs_dim) + '_a' + str(act_dim) + '_'+ log_prefix + '.txt'
 
     def _build(self):
         self._training_ops = {}
@@ -283,6 +284,10 @@ class MBPO(RLAlgorithm):
                 training_paths=training_paths,
                 evaluation_paths=evaluation_paths)
 
+            priority = diagnostics['priority']
+            with open(self.ir_filename, 'a') as file:
+                file.write(str(samples_now)+' '+str(priority)+'\n')
+
             time_diagnostics = gt.get_times().stamps.itrs
 
             diagnostics.update(OrderedDict((
@@ -404,7 +409,7 @@ class MBPO(RLAlgorithm):
             next_obs, rew, term, info = self.fake_env.step(obs, act, **kwargs)
             steps_added.append(len(obs))
 
-            samples = {'observations': obs, 'actions': act, 'next_observations': next_obs, 'rewards': rew, 'terminals': term, 'priority': np.ones_like(rew)}
+            samples = {'observations': obs, 'actions': act, 'next_observations': next_obs, 'rewards': rew, 'terminals': term, 'priority': np.ones_like(rew), 'log_pi': np.ones_like(rew)}
             self._model_pool.add_samples(samples)
 
             nonterm_mask = ~term.squeeze(-1)
@@ -744,11 +749,22 @@ class MBPO(RLAlgorithm):
              self.global_step),
             feed_dict)
 
+        '''
         diagnostics = OrderedDict({
             'Q-avg': np.mean(Q_values),
             'Q-std': np.std(Q_values),
             'Q_loss': np.mean(Q_losses),
             'alpha': alpha,
+        })
+        '''
+
+        priority = self._session.run(
+            (self.priority,
+             ),
+            feed_dict)
+
+        diagnostics = OrderedDict({
+            'priority': np.mean(priority)
         })
 
         policy_diagnostics = self._policy.get_diagnostics(

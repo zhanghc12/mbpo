@@ -355,11 +355,14 @@ class BNN:
         for epoch in epoch_iter:
             # replace the training and evaluation protocol
             for batch_num in range(int(np.ceil(idxs.shape[-1] / batch_size))):
-                #batch_idxs = idxs[:, batch_num * batch_size:(batch_num + 1) * batch_size]
+                batch_idxs = idxs[:, batch_num * batch_size:(batch_num + 1) * batch_size]
                 # modified by zhc
-                powererd_priority = np.abs(np.squeeze(np.power(priority, 1)) + 6) + 1e-5
-                batch_idxs = np.random.choice(np.arange(inputs.shape[0]), batch_size * 7, p=powererd_priority/(powererd_priority.sum()))
-                batch_idxs = batch_idxs.reshape([7, 256])
+                # powererd_priority = np.abs(np.squeeze(np.power(priority, 1)) + 6) + 1e-5
+                # priority = (priority + np.abs(priority)) / 2 + 1
+                # powererd_priority = np.squeeze(np.power(priority, 1))
+
+                # batch_idxs = np.random.choice(np.arange(inputs.shape[0]), batch_size * 7, p=powererd_priority/(powererd_priority.sum()))
+                # batch_idxs = batch_idxs.reshape([7, 256])
                 self.sess.run(
                     self.train_op,
                     feed_dict={self.sy_train_in: inputs[batch_idxs], self.sy_train_targ: targets[batch_idxs]}
