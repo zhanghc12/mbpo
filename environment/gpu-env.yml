@@ -1,6 +1,6 @@
 ## copy of https://github.com/rail-berkeley/softlearning/blob/master/environment.yml
 
-name: mbpo
+name: mbpo3
 channels:
 - defaults
 - conda-forge
@@ -10,4 +10,5 @@ dependencies:
 - conda>=4.5.9
 - patchelf=0.9
 - pip:
-    - -r requirements.txt
+    - -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
+
