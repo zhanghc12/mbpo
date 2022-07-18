@@ -162,6 +162,9 @@ class MBPO(RLAlgorithm):
         self.log_filename = '/home/zhanghc/log_mbpo/return_o' + str(obs_dim) + '_a' + str(act_dim) + '_'+ log_prefix + '.txt'
         self.ir_filename = '/home/zhanghc/log_mbpo/ir_o' + str(obs_dim) + '_a' + str(act_dim) + '_'+ log_prefix + '.txt'
 
+        print('-' * 100)
+        print(kwargs)
+
     def _build(self):
         self._training_ops = {}
 
