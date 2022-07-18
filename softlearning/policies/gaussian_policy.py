@@ -183,7 +183,7 @@ class GaussianPolicy(LatentSpacePolicy):
         return super(GaussianPolicy, self).actions_np(conditions)
 
     def log_pis_np(self, conditions, actions):
-        assert not self._deterministic, self._deterministic
+        # assert not self._deterministic, self._deterministic
         return self.log_pis_model.predict([*conditions, actions])
 
     def get_diagnostics(self, conditions):

@@ -284,9 +284,11 @@ class MBPO(RLAlgorithm):
                 training_paths=training_paths,
                 evaluation_paths=evaluation_paths)
 
-            priority = diagnostics['priority']
+            priority_diagnostics = self.get_priority_diagnostics()
+            priority = priority_diagnostics['priority']
+            prior_log_pi = priority_diagnostics['log_pi']
             with open(self.ir_filename, 'a') as file:
-                file.write(str(samples_now)+' '+str(priority)+'\n')
+                file.write(str(samples_now)+' '+str(priority)+' '+str(prior_log_pi)+'\n')
 
             time_diagnostics = gt.get_times().stamps.itrs
 
@@ -749,14 +751,14 @@ class MBPO(RLAlgorithm):
              self.global_step),
             feed_dict)
 
-        '''
+
         diagnostics = OrderedDict({
             'Q-avg': np.mean(Q_values),
             'Q-std': np.std(Q_values),
             'Q_loss': np.mean(Q_losses),
             'alpha': alpha,
         })
-        '''
+
 
         priority = self._session.run(
             (self.priority,
@@ -777,6 +779,29 @@ class MBPO(RLAlgorithm):
         if self._plotter:
             self._plotter.draw()
 
+        return diagnostics
+
+
+    def get_priority_diagnostics(self):
+        """Return diagnostic information as ordered dictionary.
+
+        Records mean and standard deviation of Q-function and state
+        value function, and TD-loss (mean squared Bellman error)
+        for the sample batch.
+
+        Also calls the `draw` method of the plotter, if plotter defined.
+        """
+        batch, _ = self._pool.random_batch(batch_size=256, return_index=True)
+        feed_dict = {
+            self._observations_ph: batch['observations'],
+            self._actions_ph: batch['actions'],
+        }
+        priority = self._session.run(self.priority, feed_dict)
+
+        diagnostics = OrderedDict({
+            'priority': np.mean(priority),
+            'log_pi': np.mean(batch['log_pi'])
+        })
         return diagnostics
 
     @property
