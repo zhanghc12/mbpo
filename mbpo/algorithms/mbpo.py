@@ -164,7 +164,7 @@ class MBPO(RLAlgorithm):
 
         print('-' * 100)
         print(training_environment)
-        print(training_environment.__domain)
+        print(training_environment._domain)
 
         assert 0
 
