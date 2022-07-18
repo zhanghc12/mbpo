@@ -49,7 +49,7 @@ class SimpleSampler(BaseSampler):
                 self._current_observation)[None]
         ])[0]
 
-        log_pi = self.policy.log_pis([
+        (log_pi) = self.policy.log_pis([
             self.env.convert_to_active_observation(
                 self._current_observation)[None]
         ],  action[None])[0]
