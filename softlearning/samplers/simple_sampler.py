@@ -51,8 +51,8 @@ class SimpleSampler(BaseSampler):
 
         log_pi = self.policy.log_pis([
             self.env.convert_to_active_observation(
-                self._current_observation)[None], action[None]
-        ])[0]
+                self._current_observation)[None]
+        ],  action[None])[0]
         # todo: add prior priority
 
         next_observation, reward, terminal, info = self.env.step(action)
