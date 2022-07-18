@@ -35,7 +35,7 @@ class SimpleSampler(BaseSampler):
             'next_observations': next_observation,
             'infos': info,
             'priority': [1],
-            'log_pi': log_pi,
+            'log_pi': [log_pi],
         }
 
         return processed_observation
@@ -53,6 +53,7 @@ class SimpleSampler(BaseSampler):
             self.env.convert_to_active_observation(
                 self._current_observation)[None]
         ],  action[None])[0]
+        print(log_pi)
         # todo: add prior priority
 
         next_observation, reward, terminal, info = self.env.step(action)
