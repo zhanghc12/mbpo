@@ -163,7 +163,9 @@ class MBPO(RLAlgorithm):
         self.ir_filename = '/home/zhanghc/log_mbpo/ir_o' + str(obs_dim) + '_a' + str(act_dim) + '_'+ log_prefix + '.txt'
 
         print('-' * 100)
-        print(kwargs)
+        print(training_environment)
+        print(training_environment.__domain)
+
         assert 0
 
     def _build(self):
