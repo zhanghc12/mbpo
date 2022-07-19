@@ -22,6 +22,7 @@ from mbpo.utils.writer import Writer
 from mbpo.utils.visualization import visualize_policy
 from mbpo.utils.logging import Progress
 import mbpo.utils.filesystem as filesystem
+import datetime
 
 
 def td_target(reward, discount, next_value):
@@ -159,14 +160,14 @@ class MBPO(RLAlgorithm):
 
         self.uncertainty_threshold = 10  # added by zhc
         log_prefix = str(np.random.randint(0,100000))
-        self.log_filename = '/home/zhanghc/log_mbpo/return_o' + str(obs_dim) + '_a' + str(act_dim) + '_'+ log_prefix + '.txt'
-        self.ir_filename = '/home/zhanghc/log_mbpo/ir_o' + str(obs_dim) + '_a' + str(act_dim) + '_'+ log_prefix + '.txt'
+        self.version = 0
+        self.log_filename = '/home/zhanghc/log_mbpo/baseline/return_' + datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_' + str(training_environment._domain) + '_'+ log_prefix + '.txt'
+        self.ir_filename = '/home/zhanghc/log_mbpo//baseline/ir_' + datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_' + str(training_environment._domain) + '_'+ log_prefix + '.txt'
 
-        print('-' * 100)
-        print(training_environment)
-        print(training_environment._domain)
-
-        assert 0
+        # print('-' * 100)
+        # print(training_environment)
+        # print()
+        # assert 0
 
     def _build(self):
         self._training_ops = {}
