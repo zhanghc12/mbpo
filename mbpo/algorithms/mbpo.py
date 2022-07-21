@@ -24,6 +24,8 @@ from mbpo.utils.logging import Progress
 import mbpo.utils.filesystem as filesystem
 import datetime
 
+import os
+import os.path as osp
 
 def td_target(reward, discount, next_value):
     return reward + discount * next_value
@@ -161,8 +163,13 @@ class MBPO(RLAlgorithm):
         self.uncertainty_threshold = 10  # added by zhc
         log_prefix = str(np.random.randint(0,100000))
         self.version = 0
-        self.log_filename = '/home/zhanghc/log_mbpo/baseline/return_' + datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_' + str(training_environment._domain) + '_'+ log_prefix + '.txt'
-        self.ir_filename = '/home/zhanghc/log_mbpo//baseline/ir_' + datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_' + str(training_environment._domain) + '_'+ log_prefix + '.txt'
+        self.log_filename = '/home/zhanghc/log_mbpo/ir/return_' + datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_' + str(training_environment._domain) + '_'+ log_prefix + '.txt'
+        self.ir_filename = '/home/zhanghc/log_mbpo//ir/ir_' + datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_' + str(training_environment._domain) + '_'+ log_prefix + '.txt'
+        if not osp.exists(osp.dirname(self.log_filename)):
+            os.makedirs(osp.dirname(self.log_filename))
+
+        if not osp.exists(osp.dirname(self.ir_filename)):
+            os.makedirs(osp.dirname(self.ir_filename))
 
         # print('-' * 100)
         # print(training_environment)
