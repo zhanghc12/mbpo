@@ -66,11 +66,11 @@ class SimpleReplayPool(FlexibleReplayPool):
                 },
                 'priority':{
                         'shape': (1,),
-                        'dtype': 'bool'
+                        'dtype': 'float32'
                 },
                 'log_pi': {
                     'shape': (1,),
-                    'dtype': 'bool'
+                    'dtype': 'float32'
                 },
             }
         }

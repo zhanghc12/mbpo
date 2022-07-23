@@ -361,15 +361,16 @@ class BNN:
                 # modified by zhc
                 # powererd_priority = np.abs(np.squeeze(np.power(priority, 1)) + 6) + 1e-5
                 # version 1
-                '''
+
                 priority = (priority + np.abs(priority)) / 2
                 powererd_priority = np.squeeze(np.power(priority, 1))
                 powererd_priority = np.exp(0.5 * powererd_priority) + 1e-2
-                '''
 
                 # version 2
+                '''
                 powererd_priority = np.exp(0.5 * (priority - log_pi)) + 1e-2
                 powererd_priority = np.squeeze(powererd_priority)
+                '''
 
                 batch_idxs = np.random.choice(np.arange(inputs.shape[0]), batch_size * 7, p=powererd_priority/(powererd_priority.sum()))
                 batch_idxs = batch_idxs.reshape([7, 256])
