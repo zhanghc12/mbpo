@@ -302,7 +302,8 @@ class MBPO(RLAlgorithm):
             priority = priority_diagnostics['priority']
             prior_log_pi = priority_diagnostics['log_pi']
             with open(self.ir_filename, 'a') as file:
-                file.write(str(samples_now)+' '+str(priority)+' '+str(prior_log_pi)+'\n')
+                file.write(str(samples_now)+' '+str(priority)+ ' ' +str(prior_log_pi) + ' ' + str(np.exp(priority - prior_log_pi))
+                           + '\n')
 
             time_diagnostics = gt.get_times().stamps.itrs
 
