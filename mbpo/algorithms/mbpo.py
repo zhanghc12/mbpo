@@ -407,8 +407,8 @@ class MBPO(RLAlgorithm):
         env_samples = self._pool.return_all_samples()
         # modified by zhc
         # train_inputs, train_outputs = format_samples_for_training(env_samples)
-        train_inputs, train_outputs, priority = format_samples_for_training(env_samples, return_priority=True)
-        model_metrics = self._model.train(train_inputs, train_outputs, priority, **kwargs)
+        train_inputs, train_outputs, priority, log_pi = format_samples_for_training(env_samples, return_priority=True)
+        model_metrics = self._model.train(train_inputs, train_outputs, priority, log_pi, **kwargs)
         return model_metrics
 
     def _rollout_model(self, rollout_batch_size, **kwargs):

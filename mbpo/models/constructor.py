@@ -27,7 +27,7 @@ def format_samples_for_training(samples, return_priority=False):
 	inputs = np.concatenate((obs, act), axis=-1)
 	outputs = np.concatenate((rew, delta_obs), axis=-1)
 	if return_priority:
-		return inputs, outputs, samples['priority']
+		return inputs, outputs, samples['priority'], samples['log_pi']
 	return inputs, outputs
 
 def reset_model(model):
