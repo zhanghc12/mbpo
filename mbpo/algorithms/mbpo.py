@@ -163,8 +163,8 @@ class MBPO(RLAlgorithm):
         self.uncertainty_threshold = 10  # added by zhc
         log_prefix = str(np.random.randint(0,100000))
         self.version = 0
-        self.log_filename = '/home/zhanghc/log_mbpo/ir_v2/return_' + datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_' + str(training_environment._domain) + '_'+ log_prefix + '.txt'
-        self.ir_filename = '/home/zhanghc/log_mbpo//ir_v2/ir_' + datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_' + str(training_environment._domain) + '_'+ log_prefix + '.txt'
+        self.log_filename = '/home/zhanghc/log_mbpo/ir_v1/return_' + datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_' + str(training_environment._domain) + '_'+ log_prefix + '.txt'
+        self.ir_filename = '/home/zhanghc/log_mbpo//ir_v1/ir_' + datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_' + str(training_environment._domain) + '_'+ log_prefix + '.txt'
         if not osp.exists(osp.dirname(self.log_filename)):
             os.makedirs(osp.dirname(self.log_filename))
 

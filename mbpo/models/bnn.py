@@ -362,7 +362,8 @@ class BNN:
 
                 priority = (priority + np.abs(priority)) / 2
                 powererd_priority = np.squeeze(np.power(priority, 1))
-                powererd_priority = np.exp(0.1 * powererd_priority) + 1e-2
+                # powererd_priority = np.exp(0.1 * powererd_priority) + 1e-2
+                powererd_priority = np.exp(0.03 * powererd_priority) + 1e-2
 
                 # version 2
                 '''
